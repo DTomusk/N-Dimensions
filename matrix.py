@@ -1,4 +1,5 @@
 import math
+import itertools
 
 class Matrix():
 	def __init__(self, data):
@@ -49,3 +50,11 @@ class Matrix():
 			roots.append([math.cos(angle),math.sin(angle)])
 		return Matrix(roots)
 
+	@staticmethod
+	def cube(dim):
+		# count up in binary pretty much to get positives and negatives 
+		# want first 2^dim binary numbers (including 0)
+		data = list(itertools.product([-1,1], repeat=dim))
+		return Matrix(data)
+
+		
