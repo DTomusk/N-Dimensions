@@ -57,4 +57,14 @@ class Matrix():
 		data = list(itertools.product([-1,1], repeat=dim))
 		return Matrix(data)
 
+	@staticmethod
+	def get_rotations(dim):
+		rotations = []
+		number_of_matrices = (dim-1)*(dim)/2
+		for i in range(number_of_matrices):
+			rotation = Matrix.identity(dim)
+			rotations.append(rotation)
+		return rotations
+
+
 		
