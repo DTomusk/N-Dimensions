@@ -3,53 +3,24 @@ from polytope import Poly
 from tkinter import *
 import math
 
+import drawing
+
 root = Tk()
 canvas_width = 1600
 canvas_height = 1200
 canvas = Canvas(root, width=canvas_width, height=canvas_height)
 canvas.pack()
 
-ORIGIN=[canvas_width/2, canvas_height/2]
-SCALE=80
-ANGLE=math.pi/24
+ANGLE=math.pi/32
 
-def drawStuff(obj):
-	canvas.delete("all")
-	drawBG()
-	drawObj(obj)
+def moveStuff(poly, rotations):
+	for rotation in rotations:
+		poly.verts = rotation * poly.verts
 
-def drawBG():
-	canvas.create_rectangle(0, 0, canvas_width, canvas_height, fill="black")
-
-def drawObj(obj):
-	coords = Matrix.conversion(obj.verts.row)*obj.verts
-	for vec in coords.data:
-		vec[0] *= SCALE
-		vec[1] *= SCALE
-		vec[0] += ORIGIN[0]
-		vec[1] += ORIGIN[1]
-		drawPoint(vec)
-	print(coords)
-	for edge in obj.edges:
-		drawLine(coords.data[edge[0]], coords.data[edge[1]])
-
-def drawLine(start, end):
-	print(start)
-	print(end)
-	canvas.create_line(start[0], start[1],
-		end[0], end[1], fill="white")
-
-def drawPoint(point):
-	canvas.create_rectangle(point[0]-2, point[1]-2, 
-		point[0]+2, point[1]+2, fill="white")
-
-def moveStuff(poly, rotation):
-	poly.verts = rotation * poly.verts
-
-def doStuff(poly, rotation):
-	drawStuff(poly)
-	#moveStuff(poly, rotation)
-	#canvas.after(100, lambda: doStuff(poly, rotation))
+def doStuff(poly, rotations):
+	drawing.drawStuff(poly, canvas)
+	moveStuff(poly, rotations)
+	canvas.after(125, lambda: doStuff(poly, rotations))
 
 def main():
 	print("Enter number of dimensions")
@@ -58,15 +29,19 @@ def main():
 	object = Matrix.cube(n)
 
 	poly = Poly(n)
-	print(poly)
+
+	rotations = []
 
 	rotation = Matrix.identity(n)
-	rotation.data[0][0] = math.cos(ANGLE)
-	rotation.data[1][0] = math.sin(ANGLE)
-	rotation.data[0][1] = -math.sin(ANGLE)
-	rotation.data[1][1] = math.cos(ANGLE)
 
-	doStuff(poly, rotation)
+	rotation.data[0][0] = math.cos(ANGLE)
+	rotation.data[n-1][0] = math.sin(ANGLE)
+	rotation.data[0][n-1] = -math.sin(ANGLE)
+	rotation.data[n-1][n-1] = math.cos(ANGLE)
+
+	rotations.append(rotation)
+
+	doStuff(poly, rotations)
 	mainloop()
 
 if __name__=="__main__":
