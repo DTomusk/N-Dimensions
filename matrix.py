@@ -2,7 +2,7 @@ import math
 import itertools
 
 class Matrix():
-	def __init__(self, data):
+	def __init__(self, data: [float]):
 		self.data = data
 		self.col = len(data)
 		self.row = len(data[0])
@@ -11,7 +11,7 @@ class Matrix():
 		string = ""
 		for i in range(self.row):
 			for j in range(self.col):
-				string += str(round(self.data[j][i])) + " "
+				string += str(round(self.data[j][i], 4)) + " "
 			string += "\n"
 		return string 
 

@@ -1,4 +1,5 @@
 from matrix import Matrix
+import math, random
 
 class Poly():
 	def __init__(self, dim):
@@ -9,6 +10,18 @@ class Poly():
 			for y in range(x, nv):
 				if Poly.adjacent(self.verts.data[x], self.verts.data[y]):
 					self.edges.append([x,y])
+		# rotations stores all rotation matrices 
+		self.rotations = []
+		for x in range(dim-1):
+			for y in range(x+1, dim):
+				angle = math.pi/(random.randrange(49)+30)
+				print(angle)
+				rotation = Matrix.identity(dim)
+				rotation.data[x][x] = math.cos(angle)
+				rotation.data[x][y] = math.sin(angle)
+				rotation.data[y][x] = -math.sin(angle)
+				rotation.data[y][y] = math.cos(angle)
+				self.rotations.append(rotation)
 
 	def __str__(self):
 		string = "Vertices:\n"
@@ -31,3 +44,41 @@ class Poly():
 			return True 
 		else: 
 			return False
+
+class Eeight(Poly):
+	def __init__(self):
+		self.verts = Eeight.verts()
+		nv = 241
+		self.edges = []
+		for x in range(nv-1):
+			for y in range(x, nv):
+				if Poly.adjacent(self.verts.data[x], self.verts.data[y]):
+					self.edges.append([x,y])
+
+	def verts():
+		verts = Matrix.cube(8)
+		for vert in verts.data:
+			if sum(vert) % 4 != 0:
+				verts.data.remove(vert)
+		for x in range(7):
+			for y in range(x+1, 8):
+				new = [0,0,0,0,0,0,0,0]
+				new[x] = 2
+				new[y] = 2
+				verts.data.append(new)
+				new = [0,0,0,0,0,0,0,0]
+				new[x] = -2
+				new[y] = 2
+				verts.data.append(new)
+				new = [0,0,0,0,0,0,0,0]
+				new[x] = 2
+				new[y] = -2
+				verts.data.append(new)
+				new = [0,0,0,0,0,0,0,0]
+				new[x] = -2
+				new[y] = -2
+				verts.data.append(new)
+		return verts
+
+
+

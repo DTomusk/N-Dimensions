@@ -1,5 +1,5 @@
 from matrix import Matrix
-from polytope import Poly
+from polytope import Poly, Eeight
 from tkinter import *
 import math
 
@@ -13,35 +13,27 @@ canvas.pack()
 
 ANGLE=math.pi/32
 
-def moveStuff(poly, rotations):
-	for rotation in rotations:
-		poly.verts = rotation * poly.verts
+def moveStuff(poly, r):
+	for x in r:
+		poly.verts = poly.rotations[x] * poly.verts
 
-def doStuff(poly, rotations):
+def doStuff(poly, r):
 	drawing.drawStuff(poly, canvas)
-	moveStuff(poly, rotations)
-	canvas.after(125, lambda: doStuff(poly, rotations))
+	#moveStuff(poly, r)
+	#canvas.after(125, lambda: doStuff(poly, r))
 
 def main():
 	print("Enter number of dimensions")
 	n = int(input())
 
-	object = Matrix.cube(n)
-
 	poly = Poly(n)
 
-	rotations = []
+	eee = Eeight()
+	print(eee)
 
-	rotation = Matrix.identity(n)
+	r = [1,4,8]
 
-	rotation.data[0][0] = math.cos(ANGLE)
-	rotation.data[n-1][0] = math.sin(ANGLE)
-	rotation.data[0][n-1] = -math.sin(ANGLE)
-	rotation.data[n-1][n-1] = math.cos(ANGLE)
-
-	rotations.append(rotation)
-
-	doStuff(poly, rotations)
+	doStuff(eee, r)
 	mainloop()
 
 if __name__=="__main__":
